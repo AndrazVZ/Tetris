@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,7 +19,7 @@ mongoose
 */
 //Example route
 app.get("/", (req, res) => {
-  res.send("Tetris project is running!");
+  res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
 //Start the server
