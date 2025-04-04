@@ -1,0 +1,39 @@
+.menu-container{
+    display:flex;
+    flex-direction: column;
+    background-color: var(--background-lighter);
+    border-radius: 20px;
+    padding:20px;
+    margin: 90px auto;
+    width: 30%;
+    text-align: center;
+}
+
+.menu-options-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menu-options-container button{
+    padding:20px;
+    border:none;
+    border-radius: 10px;
+    background-color: var(--text);
+    margin-bottom:10px; 
+    width: 70%;
+}
+
+
+
+@media screen and (max-width: 900px) {
+    .menu-container{
+        width: 80%;
+    }    
+}
+
+@media screen and (max-width: 300px) {
+    .menu-container{
+        width: 100%;
+    }    
+}
