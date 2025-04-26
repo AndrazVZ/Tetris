@@ -3,6 +3,13 @@
   --text: #E0F7FA;
   --background-lighter: #4f4f4f;
   --font-size-normal: 1.6em;
+  --l-shape-color: #03a9f4;
+  --j-shape-color:#ffff33;
+  --z-shape-color:#9c27b0;
+  --s-shape-color:#f44336;
+  --t-shape-color:#3f51b5;
+  --square-shape-color:#ffc107;
+  --line-shape-color:#4caf50;
 }
 
 html{
