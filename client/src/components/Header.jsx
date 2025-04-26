@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import "./Header.css";
+import LoginModal from "./LoginModal";
+import RegisterModal from "./RegisterModal";
 
 const Header = () => {
     const [showSettings, setShowSettings] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
+    const [showLogin, setShowLogin] = useState(false);
+    const [showRegister, setShowRegister] = useState(false);
+    const [user, setUser] = useState(null);
 
     const toggleSettings = () => {
         setShowSettings(prev => {
             const newState = !prev;
             if (newState) {
-                document.body.style.overflow = "hidden"; // disable scroll
+                document.body.style.overflow = "hidden";
             } else {
-                document.body.style.overflow = "auto"; // re-enable scroll
+                document.body.style.overflow = "auto";
             }
             return newState;
         });
@@ -29,6 +34,16 @@ const Header = () => {
         });
     };
 
+    const handleLoginSuccess = (userInfo) => {
+        setUser(userInfo);
+        setShowLogin(false);
+    };
+
+    const handleLogout = () => {
+        setUser(null);
+        setShowProfile(false);
+    };
+
     return (
         <>
             <div className="header">
@@ -42,14 +57,13 @@ const Header = () => {
 
                 <div className="icon-button" onClick={toggleSettings}>
                     &#9881;
-                    <i className="fa-solid fa-gear"></i>
                 </div>
-
             </div>
 
+            {/* Settings Modal */}
             {showSettings && (
                 <>
-                    <div className="overlay" onClick={toggleSettings}></div> {/* New overlay */}
+                    <div className="overlay" onClick={toggleSettings}></div>
                     <div className="settings-modal">
                         <h2>SETTINGS</h2>
                         <div className="volume-control">
@@ -69,21 +83,50 @@ const Header = () => {
                 </>
             )}
 
+            {/* Profile Modal */}
             {showProfile && (
                 <>
                     <div className="overlay" onClick={toggleProfile}></div>
                     <div className="profile-modal">
-                        <img
-                            src="https://volleybox.net/media/upload/players/17196706037q9hv.png"
-                            alt="Profile"
-                            className="profile-picture"
-                        />
-                        <h2 className="profile-name">Username123</h2>
-                        <button className="save-button" onClick={toggleProfile}>Close</button>
+                        {user ? (
+                            <>
+                                <img
+                                    src="https://volleybox.net/media/upload/players/17196706037q9hv.png"
+                                    alt="Profile"
+                                    className="profile-picture"
+                                />
+                                <h2 className="profile-name">{user.name}</h2>
+                                <button className="save-button" onClick={handleLogout}>Logout</button>
+                            </>
+                        ) : (
+                            <>
+                                <h2>Welcome!</h2>
+                                <button className="save-button" onClick={() => { setShowLogin(true); setShowProfile(false); }}>
+                                    Login
+                                </button>
+                                <button className="save-button" onClick={() => { setShowRegister(true); setShowProfile(false); }}>
+                                    Register
+                                </button>
+                            </>
+                        )}
                     </div>
                 </>
             )}
 
+            {/* Login Modal */}
+            {showLogin && (
+                <LoginModal
+                    onClose={() => setShowLogin(false)}
+                    onLoginSuccess={handleLoginSuccess}
+                />
+            )}
+
+            {/* Register Modal */}
+            {showRegister && (
+                <RegisterModal
+                    onClose={() => setShowRegister(false)}
+                />
+            )}
         </>
     );
 };
