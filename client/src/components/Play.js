@@ -118,8 +118,11 @@ const Play = () => {
         const shapes = [L_SHAPE,J_SHAPE,Z_SHAPE,S_SHAPE,T_SHAPE,SQUARE,LINE];
         let random = Math.floor(Math.random() * shapes.length);
         let nextRandom = Math.floor(Math.random() * shapes.length);
-
+        
         let currentShape = shapes[random];
+
+        let rotation=0;
+        
         displayNextShape();
 
 
@@ -281,6 +284,125 @@ const Play = () => {
             clearInterval(timer);
             timer = setInterval(moveDown, 1000);
         }
+        
+        function rotate(){
+            
+            switch(random){ 
+                case 0:
+                    const atLeftWall = currentShape.some(index => index % width === 0);
+                    const atRightWall = currentShape.some(index => index % width === 9);
+                    let blockedByAnotherShape;
+                    let shapeCopy = [...currentShape];
+                    
+                    undraw();
+                    if(atLeftWall){
+                        currentPosition += 1;
+                        currentShape = currentShape.map(index => index + 1);
+                    }
+                    if(atRightWall){
+                        currentPosition -= 1;
+                        currentShape = currentShape.map(index => index - 1);
+                    }
+
+                    switch(rotation){
+                        case 0:  // 0 -> 1
+                        shapeCopy[0] = currentPosition + 2 -1 + width;
+                        shapeCopy[1] = currentPosition +1 -1 +width;
+                        shapeCopy[2] = currentPosition - 1 * width;
+                        shapeCopy[3] = currentPosition + 2*width -1;
+
+                            blockedByAnotherShape = shapeCopy.some(index => {
+                                return cells[index] && cells[index].classList.contains('active');
+                            });
+
+                            if(!blockedByAnotherShape){
+                                
+                                currentShape[0]=currentPosition + 2 -1 +width;
+                                currentShape[1]=currentPosition + 1 -1 +width;
+                                currentShape[2]=currentPosition -1 +width;
+                                currentShape[3]=currentPosition + width -1 +width;
+                                rotation++;
+                            }
+                            break;
+                        case 1:  // 1 -> 2
+                            shapeCopy[0]=currentPosition + 2 * width;
+                            shapeCopy[1]=currentPosition + width;
+                            shapeCopy[2]=currentPosition;
+                            shapeCopy[3]=currentPosition - 1;
+                            
+                            blockedByAnotherShape = shapeCopy.some(index => {
+                                return cells[index] && cells[index].classList.contains('active');
+                            });
+
+                            if(!blockedByAnotherShape){
+                              
+                                currentShape[0]=currentPosition + 2 * width;
+                                currentShape[1]=currentPosition + width;
+                                currentShape[2]=currentPosition;
+                                currentShape[3]=currentPosition - 1;
+                                rotation++;
+                            }
+                            break;
+                        case 2: // 2 -> 3
+                            shapeCopy[0]=currentPosition + 2 * width;
+                            shapeCopy[1]=currentPosition + width;
+                            shapeCopy[2]=currentPosition;
+                            shapeCopy[3]=currentPosition - 1;
+                            
+                            blockedByAnotherShape = shapeCopy.some(index => {
+                                return cells[index] && cells[index].classList.contains('active');
+                            });
+
+                            if(!blockedByAnotherShape){
+                                currentShape[0]=currentPosition + 2 * width;
+                                currentShape[1]=currentPosition + width;
+                                currentShape[2]=currentPosition;
+                                currentShape[3]=currentPosition - 1;
+                                rotation++;
+                            }
+                            break;
+                        case 3: // 3 -> 4
+                            shapeCopy[0]=currentPosition + width -1;
+                            shapeCopy[1]=currentPosition + width;
+                            shapeCopy[2]=currentPosition + 1 + width;
+                            shapeCopy[3]=currentPosition + 1;
+                            
+                            blockedByAnotherShape = shapeCopy.some(index => {
+                                return cells[index] && cells[index].classList.contains('active');
+                            });
+
+                            if(!blockedByAnotherShape){
+                                currentShape[0]=currentPosition + width -1;
+                                currentShape[1]=currentPosition + width;
+                                currentShape[2]=currentPosition + 1 + width;
+                                currentShape[3]=currentPosition + 1;
+                                rotation++;
+                            }
+                            break;
+                        case 4: // 4 -> 0
+                            shapeCopy[0]=currentPosition;
+                            shapeCopy[1]=currentPosition + width;
+                            shapeCopy[2]=currentPosition + 2 * width;
+                            shapeCopy[3]=currentPosition + 2 * width + 1;
+                            
+                            blockedByAnotherShape = shapeCopy.some(index => {
+                                return cells[index] && cells[index].classList.contains('active');
+                            });
+
+                            if(!blockedByAnotherShape){
+                                currentShape[0]=currentPosition;
+                                currentShape[1]=currentPosition + width;
+                                currentShape[2]=currentPosition + 2 * width;
+                                currentShape[3]=currentPosition + 2 * width + 1;
+                                rotation=0;
+                            }
+                            break;
+                    }
+                    draw();
+            }
+        }
+        
+
         //TODO: Change to user set keybinds
         document.addEventListener('keydown', (e)=>{
             if(e.key === 'ArrowLeft'){
@@ -291,7 +413,11 @@ const Play = () => {
                 moveDown(); 
                 resetTimer();
             }
+            else if(e.key === 'ArrowUp'){
+                rotate();
+            }
         });
+        
         
 
         return () => clearInterval(timer); //Cleanup on unmount
