@@ -293,7 +293,7 @@ const Play = () => {
             let blockedByAnotherShape;
             let shapeCopy;
             switch(random){ 
-                case 0:
+                case 0:  // L shape
                     atLeftWall = currentShape.some(index => index % width === 0);
                     atRightWall = currentShape.some(index => index % width === 9);
                     shapeCopy = [...currentShape];
@@ -348,24 +348,6 @@ const Play = () => {
                             }
                             break;
                         case 2: // 2 -> 3
-                            shapeCopy[0]=currentPosition + 2 * width;
-                            shapeCopy[1]=currentPosition + width;
-                            shapeCopy[2]=currentPosition;
-                            shapeCopy[3]=currentPosition - 1;
-                            
-                            blockedByAnotherShape = shapeCopy.some(index => {
-                                return cells[index] && cells[index].classList.contains('active');
-                            });
-
-                            if(!blockedByAnotherShape){
-                                currentShape[0]=currentPosition + 2 * width;
-                                currentShape[1]=currentPosition + width;
-                                currentShape[2]=currentPosition;
-                                currentShape[3]=currentPosition - 1;
-                                rotation++;
-                            }
-                            break;
-                        case 3: // 3 -> 4
                             shapeCopy[0]=currentPosition + width -1;
                             shapeCopy[1]=currentPosition + width;
                             shapeCopy[2]=currentPosition + 1 + width;
@@ -383,7 +365,7 @@ const Play = () => {
                                 rotation++;
                             }
                             break;
-                        case 4: // 4 -> 0
+                        case 3: // 3 -> 0
                             shapeCopy[0]=currentPosition;
                             shapeCopy[1]=currentPosition + width;
                             shapeCopy[2]=currentPosition + 2 * width;
@@ -404,7 +386,7 @@ const Play = () => {
                     }
                     draw();
                     break;
-                case 4:
+                case 4:  // T shape
                     atLeftWall = (currentShape[2] % width === 0)
                     atRightWall = (currentShape[2] % width === 9)
                     shapeCopy = [...currentShape];
@@ -438,7 +420,7 @@ const Play = () => {
                                 rotation++;
                             }
                             break;
-                        case 1:
+                        case 1:  // 1 -> 2
                             shapeCopy[0] = currentPosition + 2 * width;
                             shapeCopy[1] = currentPosition + 1 + width;
                             shapeCopy[2] = currentPosition + width;
@@ -456,7 +438,7 @@ const Play = () => {
                                 rotation++;
                             }
                             break;
-                        case 2:
+                        case 2:  // 2 -> 3
                             shapeCopy[0] = currentPosition -1 + width;
                             shapeCopy[1] = currentPosition;
                             shapeCopy[2] = currentPosition + width;
@@ -474,8 +456,7 @@ const Play = () => {
                                 rotation++;
                             }
                             break;
-
-                        case 3:
+                        case 3:  // 3 -> 0
                             shapeCopy[0] = currentPosition;
                             shapeCopy[1] = currentPosition -1 + width;
                             shapeCopy[2] = currentPosition + width;
@@ -493,12 +474,9 @@ const Play = () => {
                                 rotation=0;
                             }
                             break;
-
-
                     }
                     draw();
-                    break;
-                
+                    break;  
             }
         }
         
