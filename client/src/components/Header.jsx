@@ -104,6 +104,7 @@ const Header = () => {
                                 <button className="save-button" onClick={() => { setShowLogin(true); setShowProfile(false); }}>
                                     Login
                                 </button>
+                                <br></br>
                                 <button className="save-button" onClick={() => { setShowRegister(true); setShowProfile(false); }}>
                                     Register
                                 </button>

@@ -9,6 +9,21 @@ const RegisterModal = ({ onClose }) => {
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const handleRegister = async () => {
+        // Email format regex
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // Password strength regex: at least 6 characters, at least 1 letter and 1 number
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+
+        if (!emailRegex.test(email)) {
+            alert("Please enter a valid email address.");
+            return;
+        }
+
+        if (!passwordRegex.test(password)) {
+            alert("Password must be at least 6 characters long and include both letters and numbers.");
+            return;
+        }
+
         if (password !== confirmPassword) {
             alert("Passwords do not match!");
             return;
@@ -32,6 +47,7 @@ const RegisterModal = ({ onClose }) => {
             }
         }
     };
+
 
 
     return (
