@@ -778,7 +778,7 @@ const Play = () => {
             }
         }
         
-
+        /*Test*/
         //TODO: Change to user set keybinds
         document.addEventListener('keydown', (e)=>{
             if(e.key === 'ArrowLeft'){
