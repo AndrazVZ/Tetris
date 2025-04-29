@@ -571,6 +571,107 @@ const Play = () => {
                     }
                     draw();
                     break;  
+                case 6:  // I shape
+                    atLeftWall = (currentShape[2] % width === 0)
+                    atRightWall = (currentShape[2] % width === 9)
+                    shapeCopy = [...currentShape];
+                    
+                    undraw();
+                    if(atLeftWall && rotation!=2){
+                        currentPosition += 1;
+                        currentShape = currentShape.map(index => index + 1);
+                    }
+                    else if(atLeftWall && rotation==2)
+                    {   
+                        currentPosition += 2;
+                        currentShape = currentShape.map(index => index + 2);
+                    }
+                    if(atRightWall && rotation!=0){
+                        currentPosition -= 1;
+                        currentShape = currentShape.map(index => index - 1);
+                    }
+                    else if(atRightWall && rotation==0)
+                    {
+                        currentPosition -= 2;
+                        currentShape = currentShape.map(index => index - 2);   
+                    }
+                    
+                    switch(rotation){
+                        case 0:  // 0 -> 1
+                            shapeCopy[0] = currentPosition + 2 + width;
+                            shapeCopy[1] = currentPosition + 1 + width;
+                            shapeCopy[2] = currentPosition + width;
+                            shapeCopy[3] = currentPosition - 1 + width;
+
+                            blockedByAnotherShape = shapeCopy.some(index => {
+                                return cells[index] && cells[index].classList.contains('active');
+                            });
+
+                            if(!blockedByAnotherShape){
+                                currentShape[0]=currentPosition + 2 + width;
+                                currentShape[1]=currentPosition + 1 + width;
+                                currentShape[2]=currentPosition + width;
+                                currentShape[3]=currentPosition - 1 + width;
+                                rotation++;
+                            }
+                            break;
+                        case 1:  // 1 -> 2
+                            shapeCopy[0] = currentPosition + 1;
+                            shapeCopy[1] = currentPosition + 1 + width;
+                            shapeCopy[2] = currentPosition + 1 + 2 * width;
+                            shapeCopy[3] = currentPosition + 1 + 3 * width;
+
+                            blockedByAnotherShape = shapeCopy.some(index => {
+                                return cells[index] && cells[index].classList.contains('active');
+                            });
+
+                            if(!blockedByAnotherShape){
+                                currentShape[0]=currentPosition + 1;
+                                currentShape[1]=currentPosition + 1 + width;
+                                currentShape[2]=currentPosition + 1 + 2 * width;
+                                currentShape[3]=currentPosition + 1 + 3 * width;
+                                rotation++;
+                            }
+                            break;
+                        case 2:  // 2 -> 3
+                            shapeCopy[0] = currentPosition + 2 + 2 * width;
+                            shapeCopy[1] = currentPosition + 1 + 2 * width;
+                            shapeCopy[2] = currentPosition + 2 * width;
+                            shapeCopy[3] = currentPosition - 1 + 2 * width;
+
+                            blockedByAnotherShape = shapeCopy.some(index => {
+                                return cells[index] && cells[index].classList.contains('active');
+                            });
+
+                            if(!blockedByAnotherShape){
+                                currentShape[0]=currentPosition + 2 + 2 * width;
+                                currentShape[1]=currentPosition + 1 + 2 * width;
+                                currentShape[2]=currentPosition + 2 * width;
+                                currentShape[3]=currentPosition - 1 + 2 * width;
+                                rotation++;
+                            }
+                            break;
+                        case 3:  // 3 -> 0
+                            shapeCopy[0] = currentPosition;
+                            shapeCopy[1] = currentPosition + width;
+                            shapeCopy[2] = currentPosition + 2 * width;
+                            shapeCopy[3] = currentPosition + 3 * width;
+
+                            blockedByAnotherShape = shapeCopy.some(index => {
+                                return cells[index] && cells[index].classList.contains('active');
+                            });
+
+                            if(!blockedByAnotherShape){
+                                currentShape[0]=currentPosition;
+                                currentShape[1]=currentPosition + width;
+                                currentShape[2]=currentPosition + 2 * width;
+                                currentShape[3]=currentPosition + 3 * width;
+                                rotation=0;
+                            }
+                            break;
+                    }
+                    draw();
+                    break; 
             }
         }
         
