@@ -3,6 +3,7 @@ import "./Header.css";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 import axios from "axios";
+import { useEffect } from "react";
 
 
 const Header = () => {
@@ -11,6 +12,13 @@ const Header = () => {
     const [showLogin, setShowLogin] = useState(false);
     const [showRegister, setShowRegister] = useState(false);
     const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("tetrisUser");
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
 
     const toggleSettings = () => {
         setShowSettings(prev => {
@@ -38,10 +46,12 @@ const Header = () => {
 
     const handleLoginSuccess = (userInfo) => {
         setUser(userInfo);
+        localStorage.setItem("tetrisUser", JSON.stringify(userInfo));
         setShowLogin(false);
     };
 
     const handleLogout = () => {
+        localStorage.removeItem("tetrisUser");
         setUser(null);
         setShowProfile(false);
     };
