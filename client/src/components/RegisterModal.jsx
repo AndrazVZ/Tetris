@@ -39,13 +39,15 @@ const RegisterModal = ({ onClose }) => {
             alert("Registered successfully! Now login.");
             onClose();
         } catch (error) {
-            console.error(error);
+            console.error("REGISTER ERROR:", error);
+
             if (error.response && error.response.data && error.response.data.error) {
                 alert(error.response.data.error);
             } else {
                 alert("Registration failed. Please try again.");
             }
         }
+
     };
 
 
