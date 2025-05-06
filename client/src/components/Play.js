@@ -119,11 +119,11 @@ const Play = () => {
         const shapes = [L_SHAPE,J_SHAPE,Z_SHAPE,S_SHAPE,T_SHAPE,SQUARE,LINE];
         let random = Math.floor(Math.random() * shapes.length);
         let nextRandom = Math.floor(Math.random() * shapes.length);
-        
+    
         let currentShape = shapes[random];
 
         let rotation=0;
-        
+
         displayNextShape();
 
 
@@ -299,6 +299,7 @@ const Play = () => {
         }
 
         function getNewShape(){
+            checkForFullRow();
             random = nextRandom;
             nextRandom = Math.floor(Math.random() * shapes.length);
             currentPosition = 4;
@@ -308,11 +309,11 @@ const Play = () => {
             displayNextShape();
         }
 
-        let timer = setInterval(moveDown, 1000000);
+        let timer = setInterval(moveDown, 1000);
 
         function resetTimer() {
             clearInterval(timer);
-            timer = setInterval(moveDown, 1000000);
+            timer = setInterval(moveDown, 1000);
         }
         
         function rotate(){
@@ -806,6 +807,69 @@ const Play = () => {
             }
         }
         
+        function checkForFullRow() {
+            const width = 10;
+        
+            for (let row = 0; row < cells.length; row += width) {
+                let isFullRow = true;
+        
+                for (let i = 0; i < width; i++) {
+                    if (!cells[row + i].classList.contains('active')) {
+                        isFullRow = false;
+                        break;
+                    }
+                }
+        
+                if (isFullRow) {
+                    console.log("Full row at index: " + row);
+        
+                    //remove row
+                    for (let i = 0; i < width; i++) {
+                        const cell = cells[row + i];
+                        cells[row + i].classList.remove('active');
+                        //remove all classes that end in '-shape'
+                        cell.classList.forEach(cls => {
+                            if (cls.endsWith('-shape')) {
+                                cell.classList.remove(cls);
+                            }
+                        });
+                    }
+        
+                    //Move all else down
+                    dropBlocksAbove(row);
+                }
+
+                function dropBlocksAbove(startIndex) {
+                    const width = 10;
+                
+                    for (let i = startIndex - 1; i >= 0; i--) {
+                        const current = cells[i];
+                        const below = cells[i + width];
+                
+                        //Get the shape class
+                        const shapeClass = ['l-shape', 'j-shape', 'z-shape', 's-shape', 't-shape', 'square-shape', 'line-shape']
+                            .find(cls => current.classList.contains(cls));
+                
+                        if (current.classList.contains('active')) {
+                            below.classList.add('active');
+                            if (shapeClass) below.classList.add(shapeClass);
+                        } else {
+                            below.classList.remove('active');
+                            //Clean up any previous shape class
+                            ['l-shape', 'j-shape', 'z-shape', 's-shape', 't-shape', 'square-shape', 'line-shape'].forEach(cls => {
+                                below.classList.remove(cls);
+                            });
+                        }
+                
+                        //Clear the current cell
+                        current.classList.remove('active');
+                        if (shapeClass) current.classList.remove(shapeClass);
+                    }
+                }
+            }
+        }
+        
+        
         /*Test*/
         //TODO: Change to user set keybinds
         document.addEventListener('keydown', (e)=>{
@@ -816,11 +880,9 @@ const Play = () => {
             }else if(e.key === 'ArrowDown'){
                 moveDown(); 
                 resetTimer();
-            }
-            else if(e.key === 'ArrowUp'){
+            }else if(e.key === 'ArrowUp'){
                 rotate();
-            }
-            else if(e.key === ' ' || e.key === 'Spacebar'){
+            }else if(e.key === ' ' || e.key === 'Spacebar'){
                 drop();
             }
         });
