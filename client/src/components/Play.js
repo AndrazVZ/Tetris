@@ -227,6 +227,34 @@ const Play = () => {
                 getNewShape();
             }
         }
+
+        function drop() {       
+            undraw();
+            while (true) { //Continuously drops the shape until it hits bottom or another shape
+                const atBottom = currentShape.some(index => index + width >= cells.length);
+                if (!atBottom) {
+                    //Check if any *bottom block* is blocked by another shape
+                    const blockedByAnotherShape = currentShape.some(index => {
+                        //Only check if there is NO other block of currentShape directly below this block
+                        const isBottomBlock = !currentShape.includes(index + width);
+                        if (isBottomBlock) {
+                            return cells[index + width] && cells[index + width].classList.contains('active');
+                        }
+                        return false;
+                    });
+                    if(!blockedByAnotherShape){
+                        currentPosition += width;
+                        currentShape = currentShape.map(index => index + width);
+                    }else{
+                        break;
+                    }
+                } else{
+                    break;
+                }
+            }
+            draw();
+            getNewShape();
+        }
         
         draw();
 
@@ -680,20 +708,20 @@ const Play = () => {
                     shapeCopy = [...currentShape];
                     
                     undraw();
-                    if(atLeftWall && rotation!=2){
+                    if(atLeftWall && rotation!==2){
                         currentPosition += 1;
                         currentShape = currentShape.map(index => index + 1);
                     }
-                    else if(atLeftWall && rotation==2)
+                    else if(atLeftWall && rotation===2)
                     {   
                         currentPosition += 2;
                         currentShape = currentShape.map(index => index + 2);
                     }
-                    if(atRightWall && rotation!=0){
+                    if(atRightWall && rotation!==0){
                         currentPosition -= 1;
                         currentShape = currentShape.map(index => index - 1);
                     }
-                    else if(atRightWall && rotation==0)
+                    else if(atRightWall && rotation===0)
                     {
                         currentPosition -= 2;
                         currentShape = currentShape.map(index => index - 2);   
@@ -791,6 +819,9 @@ const Play = () => {
             }
             else if(e.key === 'ArrowUp'){
                 rotate();
+            }
+            else if(e.key === ' ' || e.key === 'Spacebar'){
+                drop();
             }
         });
         
