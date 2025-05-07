@@ -143,3 +143,34 @@ background-color: white;
 .mini-cell.active.line-shape{
     background-color: var(--line-shape-color);
 }
+
+
+.board-cell.projection-l{
+    background-color: var(--l-shape-color);
+    opacity: 30%;
+}
+
+.board-cell.projection-j{
+    background-color: var(--j-shape-color);
+    opacity: 30%;
+}
+.board-cell.projection-z{
+    background-color: var(--z-shape-color);
+    opacity: 30%;
+}
+.board-cell.projection-s{
+    background-color: var(--s-shape-color);
+    opacity: 30%;
+}
+.board-cell.projection-t{
+    background-color: var(--t-shape-color);
+    opacity: 30%;
+}
+.board-cell.projection-square{
+    background-color: var(--square-shape-color);
+    opacity: 30%;
+}
+.board-cell.projection-line{
+    background-color: var(--line-shape-color);
+    opacity: 30%;
+}

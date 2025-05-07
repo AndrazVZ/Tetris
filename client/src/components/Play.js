@@ -9,6 +9,7 @@ const Play = () => {
         const board = document.querySelector('.board');
         const cells = Array.from(board.children);
         const width = 10;
+        const DROP_INTERVAL = 1000;
 
         const miniBoard = document.querySelector('.next-block');
         const miniCells = Array.from(miniBoard.children);
@@ -62,6 +63,7 @@ const Play = () => {
                 miniCells[index].classList.add('active');
                 miniCells[index].classList.add(shapeClass);
             });
+            
         }
 
 
@@ -119,14 +121,19 @@ const Play = () => {
         const shapes = [L_SHAPE,J_SHAPE,Z_SHAPE,S_SHAPE,T_SHAPE,SQUARE,LINE];
         let random = Math.floor(Math.random() * shapes.length);
         let nextRandom = Math.floor(Math.random() * shapes.length);
-    
+        let currentScore = 0;
+        const scoreElement = document.getElementById('current-score');
         let currentShape = shapes[random];
+        let shapeProjection = currentShape;
 
         let rotation=0;
+        updateScoreElement();
 
         displayNextShape();
 
-
+        function updateScoreElement(){
+            scoreElement.innerHTML = currentScore;
+        }
 
 
         function draw() {
@@ -165,6 +172,7 @@ const Play = () => {
                         break;
                 }
             });
+            drawShapeProjection();
         }
         
         function undraw() {
@@ -206,6 +214,7 @@ const Play = () => {
             //.some() checks if any of the cells in the shape are going over the board
             const atBottom = currentShape.some(index => index + width >= cells.length);
             if (!atBottom) {
+                
                 //Check if any *bottom block* is blocked by another shape
                 const blockedByAnotherShape = currentShape.some(index => {
                     //Only check if there is NO other block of currentShape directly below this block
@@ -225,6 +234,17 @@ const Play = () => {
                 }
             } else {
                 getNewShape();
+            }
+            const overlapWithProjection = currentShape.filter(index => shapeProjection.includes(index));
+            if (overlapWithProjection.length > 0) {
+                overlapWithProjection.forEach(value => {
+                    cells[value].classList.forEach(cls => {
+                        if (cls.startsWith('projection-')) {
+                            console.log(cls);
+                            cells[value].classList.remove(cls);
+                        }
+                    });
+                });
             }
         }
 
@@ -252,7 +272,19 @@ const Play = () => {
                     break;
                 }
             }
+            
             draw();
+            const overlapWithProjection = currentShape.filter(index => shapeProjection.includes(index));
+            if (overlapWithProjection.length > 0) {
+                overlapWithProjection.forEach(value => {
+                    cells[value].classList.forEach(cls => {
+                        if (cls.startsWith('projection-')) {
+                            console.log(cls);
+                            cells[value].classList.remove(cls);
+                        }
+                    });
+                });
+            }
             getNewShape();
         }
         
@@ -274,11 +306,20 @@ const Play = () => {
                 }
         
                 draw();
+                const overlapWithProjection = currentShape.filter(index => shapeProjection.includes(index));
+                if (overlapWithProjection.length > 0) {
+                    overlapWithProjection.forEach(value => {
+                        cells[value].classList.forEach(cls => {
+                            if (cls.startsWith('projection-')) {
+                                console.log(cls);
+                                cells[value].classList.remove(cls);
+                            }
+                        });
+                    });
+                }
             }
         }
         
-        
-
         function moveRight(){
             const atRightWall = currentShape.some(index => index % width === 9);
         
@@ -295,25 +336,122 @@ const Play = () => {
                 }
         
                 draw();
+                const overlapWithProjection = currentShape.filter(index => shapeProjection.includes(index));
+                if (overlapWithProjection.length > 0) {
+                    overlapWithProjection.forEach(value => {
+                        cells[value].classList.forEach(cls => {
+                            if (cls.startsWith('projection-')) {
+                                console.log(cls);
+                                cells[value].classList.remove(cls);
+                            }
+                        });
+                    });
+                }
             }
         }
 
         function getNewShape(){
-            checkForFullRow();
+            checkForFullRow(); //Async animation?
             random = nextRandom;
             nextRandom = Math.floor(Math.random() * shapes.length);
             currentPosition = 4;
             currentShape = shapes[random];
+            shapeProjection = currentShape;
             rotation=0;
             draw();
             displayNextShape();
         }
 
-        let timer = setInterval(moveDown, 1000);
+        function drawShapeProjection(){
+            var projectionClassRemove;
+            switch(random){
+                case 0:
+                    projectionClassRemove ='projection-l';
+                    break;
+                case 1:
+                    projectionClassRemove ='projection-j';
+                    break;
+                case 2:
+                    projectionClassRemove = 'projection-z';
+                    break;
+                case 3:
+                    projectionClassRemove = 'projection-s';
+                    break;
+                case 4: 
+                projectionClassRemove = 'projection-t';
+                    break;
+                case 5:
+                    projectionClassRemove = 'projection-square';
+                    break;
+                case 6:
+                    projectionClassRemove = 'projection-line';
+                    break;
+                default:
+                    break;
+            }
+
+            shapeProjection.forEach(index => {
+                cells[index].classList.remove(projectionClassRemove);
+            });
+
+            shapeProjection = currentShape;
+            while (true) { //Continuously drops the shape until it hits bottom or another shape
+                const atBottom = shapeProjection.some(index => index + width >= cells.length);
+                if (!atBottom) {
+                    //Check if any *bottom block* is blocked by another shape
+                    const blockedByAnotherShape = shapeProjection.some(index => {
+                        //Only check if there is NO other block of currentShape directly below this block
+                        const isBottomBlock = !shapeProjection.includes(index + width);
+                        if (isBottomBlock) {
+                            return cells[index + width] && cells[index + width].classList.contains('active');
+                        }
+                        return false;
+                    });
+                    if(!blockedByAnotherShape){
+                        //currentPosition += width;
+                        shapeProjection = shapeProjection.map(index => index + width);
+                    }else{
+                        break;
+                    }
+                } else{
+                    break;
+                }
+            }
+
+            shapeProjection.forEach(index => {
+                switch(random){ //Check what index did it choose and then give it a correct color for that shape
+                    case 0:
+                        cells[index].classList.add('projection-l');
+                        break;
+                    case 1:
+                        cells[index].classList.add('projection-j');
+                        break;
+                    case 2:
+                        cells[index].classList.add('projection-z');
+                        break;
+                    case 3:
+                        cells[index].classList.add('projection-s');
+                        break;
+                    case 4: 
+                        cells[index].classList.add('projection-t');
+                        break;
+                    case 5:
+                        cells[index].classList.add('projection-square');
+                        break;
+                    case 6:
+                        cells[index].classList.add('projection-line');
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+
+        let timer = setInterval(moveDown, DROP_INTERVAL);
 
         function resetTimer() {
             clearInterval(timer);
-            timer = setInterval(moveDown, 1000);
+            timer = setInterval(moveDown, DROP_INTERVAL);
         }
         
         function rotate(){
@@ -805,10 +943,12 @@ const Play = () => {
                     draw();
                     break; 
             }
+            drawShapeProjection();
         }
         
         function checkForFullRow() {
             const width = 10;
+            var rows = 0;
         
             for (let row = 0; row < cells.length; row += width) {
                 let isFullRow = true;
@@ -821,7 +961,7 @@ const Play = () => {
                 }
         
                 if (isFullRow) {
-                    console.log("Full row at index: " + row);
+                    //console.log("Full row at index: " + row);
         
                     //remove row
                     for (let i = 0; i < width; i++) {
@@ -838,6 +978,7 @@ const Play = () => {
                     //Move all else down
                     dropBlocksAbove(row);
                 }
+                
 
                 function dropBlocksAbove(startIndex) {
                     const width = 10;
@@ -864,10 +1005,34 @@ const Play = () => {
                         //Clear the current cell
                         current.classList.remove('active');
                         if (shapeClass) current.classList.remove(shapeClass);
+
+                        
                     }
+                    rows++;
                 }
             }
+
+            //Check how many rows were deleted
+            switch(rows){
+                case 1:
+                    currentScore += 40;
+                    break;
+                case 2:
+                    currentScore += 100;
+                    break;
+                case 3:
+                    currentScore += 300;
+                    break;
+                case 4:
+                    currentScore += 1200;
+                    break;
+                default:
+                    currentScore += 0;
+                    break;
+            }
+            updateScoreElement();
         }
+            
         
         
         /*Test*/
@@ -887,9 +1052,9 @@ const Play = () => {
             }
         });
         
-        
-
         return () => clearInterval(timer); //Cleanup on unmount
+        
+        
     }, []);
 
     return (
@@ -919,7 +1084,7 @@ const Play = () => {
                     </div>
                     <div className="score-container">
                         <p>Score</p>
-                        <h2>0</h2>
+                        <h2 id="current-score"></h2>
                     </div>
                 </div>
             </div>
