@@ -240,7 +240,6 @@ const Play = () => {
                 overlapWithProjection.forEach(value => {
                     cells[value].classList.forEach(cls => {
                         if (cls.startsWith('projection-')) {
-                            console.log(cls);
                             cells[value].classList.remove(cls);
                         }
                     });
@@ -279,7 +278,6 @@ const Play = () => {
                 overlapWithProjection.forEach(value => {
                     cells[value].classList.forEach(cls => {
                         if (cls.startsWith('projection-')) {
-                            console.log(cls);
                             cells[value].classList.remove(cls);
                         }
                     });
@@ -358,6 +356,16 @@ const Play = () => {
             currentShape = shapes[random];
             shapeProjection = currentShape;
             rotation=0;
+
+            currentShape.forEach(index => {
+                cells[index].classList.forEach(cls => {
+                    if (cls.startsWith('active')) {
+                        //console.log("end");
+                        clearInterval(timer);
+                        //ending the game
+                    }
+                });
+            });
             draw();
             displayNextShape();
         }
