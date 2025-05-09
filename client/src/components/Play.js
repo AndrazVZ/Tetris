@@ -9,7 +9,7 @@ const Play = () => {
         const board = document.querySelector('.board');
         const cells = Array.from(board.children);
         const width = 10;
-        const DROP_INTERVAL = 10000000;
+        const DROP_INTERVAL = 1000;
 
         const miniBoard = document.querySelector('.next-block');
         const miniCells = Array.from(miniBoard.children);
@@ -349,26 +349,23 @@ const Play = () => {
         }
 
         function getNewShape(){
-            checkForFullRow(); //Async animation?
-            random = nextRandom;
-            nextRandom = Math.floor(Math.random() * shapes.length);
-            currentPosition = 4;
-            currentShape = shapes[random];
-            shapeProjection = currentShape;
-            rotation=0;
-
-            currentShape.forEach(index => {
-                cells[index].classList.forEach(cls => {
-                    if (cls.startsWith('active')) {
-                        //console.log("end");
-                        clearInterval(timer);
-                        //ending the game
-                    }
-                });
-            });
-            
-            draw();
-            displayNextShape();
+            if(!cells[4].classList.contains("active"))
+            {
+                checkForFullRow(); //Async animation?
+                random = nextRandom;
+                nextRandom = Math.floor(Math.random() * shapes.length);
+                currentPosition = 4;
+                currentShape = shapes[random];
+                shapeProjection = currentShape;
+                rotation=0;
+                draw();
+                displayNextShape();
+            }
+            else {
+                console.log("endgame");
+                clearInterval(timer);
+                //call pop-up
+            }
         }
 
         function drawShapeProjection(){
