@@ -9,7 +9,7 @@ const Play = () => {
         const board = document.querySelector('.board');
         const cells = Array.from(board.children);
         const width = 10;
-        const DROP_INTERVAL = 1000;
+        const DROP_INTERVAL = 10000000;
 
         const miniBoard = document.querySelector('.next-block');
         const miniCells = Array.from(miniBoard.children);
@@ -309,7 +309,7 @@ const Play = () => {
                     overlapWithProjection.forEach(value => {
                         cells[value].classList.forEach(cls => {
                             if (cls.startsWith('projection-')) {
-                                console.log(cls);
+                                //console.log(cls);
                                 cells[value].classList.remove(cls);
                             }
                         });
@@ -339,7 +339,7 @@ const Play = () => {
                     overlapWithProjection.forEach(value => {
                         cells[value].classList.forEach(cls => {
                             if (cls.startsWith('projection-')) {
-                                console.log(cls);
+                                //console.log(cls);
                                 cells[value].classList.remove(cls);
                             }
                         });
@@ -366,6 +366,7 @@ const Play = () => {
                     }
                 });
             });
+            
             draw();
             displayNextShape();
         }
@@ -463,7 +464,6 @@ const Play = () => {
         }
         
         function rotate(){
-            console.log(random);
             let atLeftWall;
             let atRightWall;
             let blockedByAnotherShape;
@@ -476,12 +476,30 @@ const Play = () => {
                     
                     undraw();
                     if(atLeftWall){
-                        currentPosition += 1;
-                        currentShape = currentShape.map(index => index + 1);
+                        blockedByAnotherShape = currentShape.some(index => {
+                            return cells[index+1] && cells[index+1].classList.contains('active');
+                        });
+                        if(!blockedByAnotherShape){
+                            currentPosition += 1;
+                            currentShape = currentShape.map(index => index + 1);
+                        }
+                        else {
+                            draw();
+                            break;
+                        }
                     }
                     if(atRightWall){
-                        currentPosition -= 1;
-                        currentShape = currentShape.map(index => index - 1);
+                        blockedByAnotherShape = currentShape.some(index => {
+                            return cells[index-1] && cells[index-1].classList.contains('active');
+                        });
+                        if(!blockedByAnotherShape){
+                            currentPosition -= 1;
+                            currentShape = currentShape.map(index => index - 1);
+                        }
+                        else {
+                            draw();
+                            break;
+                        }
                     }
                     
                     switch(rotation){
@@ -569,12 +587,30 @@ const Play = () => {
                     
                     undraw();
                     if(atLeftWall){
-                        currentPosition += 1;
-                        currentShape = currentShape.map(index => index + 1);
+                        blockedByAnotherShape = currentShape.some(index => {
+                            return cells[index+1] && cells[index+1].classList.contains('active');
+                        });
+                        if(!blockedByAnotherShape){
+                            currentPosition += 1;
+                            currentShape = currentShape.map(index => index + 1);
+                        }
+                        else {
+                            draw();
+                            break;
+                        }
                     }
                     if(atRightWall){
-                        currentPosition -= 1;
-                        currentShape = currentShape.map(index => index - 1);
+                        blockedByAnotherShape = currentShape.some(index => {
+                            return cells[index-1] && cells[index-1].classList.contains('active');
+                        });
+                        if(!blockedByAnotherShape){
+                            currentPosition -= 1;
+                            currentShape = currentShape.map(index => index - 1);
+                        }
+                        else {
+                            draw();
+                            break;
+                        }
                     }
                     switch(rotation){
                         case 0:  // 0 -> 1
@@ -657,13 +693,25 @@ const Play = () => {
                     draw();
                     break;
                 case 2:  // Z shape
+                    if(currentPosition === 4){
+                        return;
+                    }
                     atRightWall = (currentShape[1] % width === 9);
                     shapeCopy = [...currentShape];
                     
                     undraw();
                     if(atRightWall){
-                        currentPosition -= 1;
-                        currentShape = currentShape.map(index => index - 1);
+                        blockedByAnotherShape = currentShape.some(index => {
+                            return cells[index-1] && cells[index-1].classList.contains('active');
+                        });
+                        if(!blockedByAnotherShape){
+                            currentPosition -= 1;
+                            currentShape = currentShape.map(index => index - 1);
+                        }
+                        else {
+                            draw();
+                            break;
+                        }
                     }
 
                     switch(rotation){
@@ -708,13 +756,25 @@ const Play = () => {
                     draw();
                     break;
                 case 3:  // S shape
+                    if(currentPosition === 4){
+                        return;
+                    }
                     atRightWall = (currentShape[1] % width === 9);
                     shapeCopy = [...currentShape];
                     
                     undraw();
                     if(atRightWall){
-                        currentPosition -= 1;
-                        currentShape = currentShape.map(index => index - 1);
+                        blockedByAnotherShape = currentShape.some(index => {
+                            return cells[index-1] && cells[index-1].classList.contains('active');
+                        });
+                        if(!blockedByAnotherShape){
+                            currentPosition -= 1;
+                            currentShape = currentShape.map(index => index - 1);
+                        }
+                        else {
+                            draw();
+                            break;
+                        }
                     }
 
                     switch(rotation){
@@ -765,12 +825,30 @@ const Play = () => {
                     
                     undraw();
                     if(atLeftWall){
-                        currentPosition += 1;
-                        currentShape = currentShape.map(index => index + 1);
+                        blockedByAnotherShape = currentShape.some(index => {
+                            return cells[index+1] && cells[index+1].classList.contains('active');
+                        });
+                        if(!blockedByAnotherShape){
+                            currentPosition += 1;
+                            currentShape = currentShape.map(index => index + 1);
+                        }
+                        else {
+                            draw();
+                            break;
+                        }
                     }
                     if(atRightWall){
-                        currentPosition -= 1;
-                        currentShape = currentShape.map(index => index - 1);
+                        blockedByAnotherShape = currentShape.some(index => {
+                            return cells[index-1] && cells[index-1].classList.contains('active');
+                        });
+                        if(!blockedByAnotherShape){
+                            currentPosition -= 1;
+                            currentShape = currentShape.map(index => index - 1);
+                        }
+                        else {
+                            draw();
+                            break;
+                        }
                     }
                     
                     switch(rotation){
@@ -856,24 +934,59 @@ const Play = () => {
                     
                     undraw();
                     if(atLeftWall && rotation!==2){
-                        currentPosition += 1;
-                        currentShape = currentShape.map(index => index + 1);
+                        blockedByAnotherShape = currentShape.some(index => {
+                            return cells[index+1] && cells[index+1].classList.contains('active');
+                        });
+                        if(!blockedByAnotherShape){
+                            currentPosition += 1;
+                            currentShape = currentShape.map(index => index + 1);
+                        }
+                        else {
+                            draw();
+                            break;
+                        }
                     }
                     else if(atLeftWall && rotation===2)
                     {   
-                        currentPosition += 2;
-                        currentShape = currentShape.map(index => index + 2);
+                        blockedByAnotherShape = currentShape.some(index => {
+                            return cells[index+2] && cells[index+2].classList.contains('active');
+                        });
+                        if(!blockedByAnotherShape){
+                            currentPosition += 2;
+                            currentShape = currentShape.map(index => index + 2);
+                        }
+                        else {
+                            draw();
+                            break;
+                        }
                     }
                     if(atRightWall && rotation!==0){
-                        currentPosition -= 1;
-                        currentShape = currentShape.map(index => index - 1);
+                        blockedByAnotherShape = currentShape.some(index => {
+                            return cells[index-1] && cells[index-1].classList.contains('active');
+                        });
+                        if(!blockedByAnotherShape){
+                            currentPosition -= 1;
+                            currentShape = currentShape.map(index => index - 1);
+                        }
+                        else {
+                            draw();
+                            break;
+                        }
                     }
                     else if(atRightWall && rotation===0)
                     {
-                        currentPosition -= 2;
-                        currentShape = currentShape.map(index => index - 2);   
+                        blockedByAnotherShape = currentShape.some(index => {
+                            return cells[index-2] && cells[index-2].classList.contains('active');
+                        });
+                        if(!blockedByAnotherShape){
+                            currentPosition -= 2;
+                            currentShape = currentShape.map(index => index - 2);
+                        }
+                        else {
+                            draw();
+                            break;
+                        }   
                     }
-                    
                     switch(rotation){
                         case 0:  // 0 -> 1
                             shapeCopy[0] = currentPosition + 2 + width;
@@ -952,6 +1065,16 @@ const Play = () => {
                     break; 
             }
             drawShapeProjection();
+            const overlapWithProjection = currentShape.filter(index => shapeProjection.includes(index));
+            if (overlapWithProjection.length > 0) {
+                overlapWithProjection.forEach(value => {
+                    cells[value].classList.forEach(cls => {
+                        if (cls.startsWith('projection-')) {
+                            cells[value].classList.remove(cls);
+                        }
+                    });
+                });
+            }
         }
         
         function checkForFullRow() {
@@ -1041,8 +1164,6 @@ const Play = () => {
             updateScoreElement();
         }
             
-        
-        
         /*Test*/
         //TODO: Change to user set keybinds
         document.addEventListener('keydown', (e)=>{
