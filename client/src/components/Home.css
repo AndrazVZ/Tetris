@@ -30,6 +30,10 @@ header{
     width: 70%;
 }
 
+.menu-options-container a{
+  width: 100%;
+}
+
 /*FALLING BLOCKS BG*/
 .background {
     position: fixed;
