@@ -1,6 +1,7 @@
 // Play.js
 import React, { useEffect } from "react";
 import "./Play.css";
+import Header from './Header';
 
 
 
@@ -1184,12 +1185,9 @@ const Play = () => {
     }, []);
 
     return (
+        <>
+        <Header />
         <div className="container col">
-            <header className="game-page-header">
-                <div className="left"><i className="fa-solid fa-arrow-left"></i></div>
-                <div><h2>TETRIS</h2></div>
-                <div className="right"><i className="fa-solid fa-gear"></i></div>
-            </header>
             <div className="game-container">
                 <div className="board"> 
                     {Array.from({ length: 200 }).map((_, i) => (
@@ -1215,6 +1213,7 @@ const Play = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

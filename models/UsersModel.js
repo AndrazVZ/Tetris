@@ -6,7 +6,7 @@ const UsersSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     score: { type: Number, required: true, default: 0 },
-    profilePicture: { type: String, default: "https://cdn-icons-png.flaticon.com/512/149/149071.png" }, // 👈 ADD THIS
+    profilePicture: { type: String, default: "https://cdn-icons-png.flaticon.com/512/149/149071.png" }, 
 }, { collection: 'Users' });
 
 

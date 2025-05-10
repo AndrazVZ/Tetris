@@ -22,7 +22,7 @@ const LoginModal = ({ onClose, onLoginSuccess }) => {
 
     return (
         <>
-            <div className="overlay" onClick={onClose}></div> {/* ADD THIS */}
+            <div className="overlay" onClick={onClose}></div> {}
             <div className="modal">
                 <h2>Login</h2>
                 <input
