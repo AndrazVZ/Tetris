@@ -8,4 +8,7 @@ router.get("/", UsersController.getAllUsers);
 // Route to create a new user
 router.post("/", UsersController.createUser);
 
+router.put('/update-profile-picture/:userId', UsersController.updateProfilePicture);
+
+
 module.exports = router;

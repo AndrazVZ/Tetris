@@ -25,7 +25,28 @@ const User = require("../models/UsersModel.js"); // Import the User model
     }
     };
 
+    const updateProfilePicture = async (req, res) => {
+        const { profilePicture } = req.body;
+
+        try {
+            const updatedUser = await User.findByIdAndUpdate(
+                req.params.userId,
+                { profilePicture },
+                { new: true }
+            );
+            res.json(updatedUser);
+        } catch (error) {
+            console.error("Error updating profile picture:", error);
+            res.status(500).json({ error: "Failed to update profile picture" });
+        }
+    };
+
 module.exports = {
-  getAllUsers,
-  createUser
+    updateProfilePicture,
+};
+
+module.exports = {
+    getAllUsers,
+    createUser,
+    updateProfilePicture,
 };

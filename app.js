@@ -1,16 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
+const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Import models, controllers, and routes
-const UsersRoutes = require("./routes/UsersRoutes"); // Routes
-
-
-app.use(express.json()); // Middleware to parse JSON data
+// Middlewares
+app.use(cors());
+app.use(express.json());        // Parse JSON
 
 // Connect to MongoDB
 const { MONGO_USER, MONGO_PASS } = process.env;
@@ -20,18 +19,27 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise;
 
 mongoose.connection.on("error", (err) => {
-  console.error(" MongoDB connection error:", err);
+  console.error("MongoDB connection error:", err);
 });
 
 mongoose.connection.once("open", () => {
-  console.log(" Successfully connected to MongoDB");
+  console.log("Successfully connected to MongoDB");
 });
 
-// Use Routes
-app.use("/", UsersRoutes); // Use users routes under the '/api/users' path
+// Import Routes
+const UsersRoutes = require("./routes/UsersRoutes");
+const authRoutes = require("./routes/auth");
 
-// Serve React static files
+// Use Routes
+app.use("/api/users", UsersRoutes);
+app.use("/api/auth", authRoutes);
+
+// Serve React frontend static files (only for production)
 app.use(express.static(path.join(__dirname, "client", "build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
 // Start the server
 app.listen(PORT, () => {
