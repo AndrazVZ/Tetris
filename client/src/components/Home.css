@@ -2,6 +2,10 @@ header{
     text-align: center;
 }
 
+.container {
+    padding-top: 200px;
+}
+
 .menu-container{
     display:flex;
     flex-direction: column;
@@ -89,4 +93,33 @@ header{
         width: 100%;
         padding:0px;
     }    
+}
+
+.profile-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #111;
+    color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    z-index: 2000;
+    animation: fadeInScale 0.3s ease forwards;
+}
+
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%; /* Makes it circular */
+    object-fit: cover;
+    margin-bottom: 1rem;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
 }

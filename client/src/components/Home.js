@@ -1,5 +1,6 @@
 import React from "react";
 import "./Home.css";
+import Header from './Header';
 import { Link } from "react-router-dom";
 
 let width = window.innerWidth;
@@ -79,12 +80,10 @@ const generateBlocks = () => {
 
 const Home = ()=>{
     return (
+        <>
+        <Header />
         <div className="container col">
             <div className="background">{generateBlocks()}</div>
-            <header>
-                <h1>Tetris</h1>
-            </header>
-            
 
             <div className="menu-container">
                 <div className="menu-options-container">
@@ -94,6 +93,7 @@ const Home = ()=>{
                 </div>
             </div>
         </div>
+        </>
     );
 };
 
