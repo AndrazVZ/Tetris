@@ -13,7 +13,7 @@ const LoginModal = ({ onClose, onLoginSuccess }) => {
                 password,
             });
 
-            onLoginSuccess(res.data.user);
+            onLoginSuccess(res.data);
             onClose();
         } catch (error) {
             alert(error.response.data.error || "Login failed");

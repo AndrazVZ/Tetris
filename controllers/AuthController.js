@@ -40,7 +40,14 @@ exports.login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
 
-        res.json({ message: "Login successful", user: { name: user.name, score: user.score } });
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            score: user.score,
+            profilePicture: user.profilePicture || "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+        });
+
     } catch (error) {
         res.status(500).json({ message: "Error logging in", error: error.message });
     }
