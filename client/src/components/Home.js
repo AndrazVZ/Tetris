@@ -1,5 +1,7 @@
 import React from "react";
 import "./Home.css";
+import Header from './Header';
+import { Link } from "react-router-dom";
 
 let width = window.innerWidth;
 
@@ -19,7 +21,6 @@ const tetrisShapes = [
 
 const generateBlocks = () => {
     const blocks = [];
-    let counter = 0;
     const colors=[
         "03A9F4",
         "FFFF33",
@@ -79,21 +80,20 @@ const generateBlocks = () => {
 
 const Home = ()=>{
     return (
+        <>
+        <Header />
         <div className="container col">
             <div className="background">{generateBlocks()}</div>
-            <header>
-                <h1>Tetris</h1>
-            </header>
-            
 
             <div className="menu-container">
                 <div className="menu-options-container">
-                    <button>Play</button>
+                    <Link to="/play"><button>Play</button></Link>
                     <button>Leaderboard</button>
                     <button>Settings</button>
                 </div>
             </div>
         </div>
+        </>
     );
 };
 
