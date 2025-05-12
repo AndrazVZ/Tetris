@@ -352,13 +352,14 @@ const Play = () => {
         function getNewShape(){
             if(!cells[4].classList.contains("active"))
             {
+                currentShape=null;
                 checkForFullRow(); //Async animation?
                 random = nextRandom;
                 nextRandom = Math.floor(Math.random() * shapes.length);
                 currentPosition = 4;
-                currentShape = shapes[random];
-                shapeProjection = currentShape;
                 rotation=0;
+                currentShape = [...shapes[random]]; 
+                shapeProjection = [...currentShape];
                 draw();
                 displayNextShape();
             }
@@ -471,7 +472,6 @@ const Play = () => {
                     atLeftWall = (currentShape[1] % width === 0)
                     atRightWall = (currentShape[1] % width === 9)
                     shapeCopy = [...currentShape];
-                    
                     undraw();
                     if(atLeftWall){
                         blockedByAnotherShape = currentShape.some(index => {
@@ -691,7 +691,7 @@ const Play = () => {
                     draw();
                     break;
                 case 2:  // Z shape
-                    if(currentPosition === 4){
+                    if(currentPosition <= 9){
                         return;
                     }
                     atRightWall = (currentShape[1] % width === 9);
@@ -754,7 +754,7 @@ const Play = () => {
                     draw();
                     break;
                 case 3:  // S shape
-                    if(currentPosition === 4){
+                    if(currentPosition <= 9){
                         return;
                     }
                     atRightWall = (currentShape[1] % width === 9);
@@ -815,12 +815,12 @@ const Play = () => {
                         
                     }
                     draw();
+
                     break;    
                 case 4:  // T shape
                     atLeftWall = (currentShape[2] % width === 0)
                     atRightWall = (currentShape[2] % width === 9)
                     shapeCopy = [...currentShape];
-                    
                     undraw();
                     if(atLeftWall){
                         blockedByAnotherShape = currentShape.some(index => {
