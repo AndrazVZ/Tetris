@@ -186,6 +186,8 @@ const Play = () => {
         let currentShape = shapes[random];
         let shapeProjection = currentShape;
         let savedShape=null;
+        let tmpHold=null;
+        let canHold=true;
 
         let rotation=0;
         updateScoreElement();
@@ -197,56 +199,58 @@ const Play = () => {
         }
 
         function hold(){
-            let tmp;
-            undraw();
-            var projectionClassRemove;
-            switch(random){
-                case 0:
-                    projectionClassRemove ='projection-l';
-                    break;
-                case 1:
-                    projectionClassRemove ='projection-j';
-                    break;
-                case 2:
-                    projectionClassRemove = 'projection-z';
-                    break;
-                case 3:
-                    projectionClassRemove = 'projection-s';
-                    break;
-                case 4: 
-                projectionClassRemove = 'projection-t';
-                    break;
-                case 5:
-                    projectionClassRemove = 'projection-square';
-                    break;
-                case 6:
-                    projectionClassRemove = 'projection-line';
-                    break;
-                default:
-                    break;
-            }
+            if(canHold) //checks if it can hold shape
+            {
+                canHold=false; //disables the hold function until new shape is placed
+                undraw();
+                var projectionClassRemove;
+                switch(random){
+                    case 0:
+                        projectionClassRemove ='projection-l';
+                        break;
+                    case 1:
+                        projectionClassRemove ='projection-j';
+                        break;
+                    case 2:
+                        projectionClassRemove = 'projection-z';
+                        break;
+                    case 3:
+                        projectionClassRemove = 'projection-s';
+                        break;
+                    case 4: 
+                    projectionClassRemove = 'projection-t';
+                        break;
+                    case 5:
+                        projectionClassRemove = 'projection-square';
+                        break;
+                    case 6:
+                        projectionClassRemove = 'projection-line';
+                        break;
+                    default:
+                        break;
+                }
 
-            shapeProjection.forEach(index => {
-                cells[index].classList.remove(projectionClassRemove);
-            });
+                shapeProjection.forEach(index => {
+                    cells[index].classList.remove(projectionClassRemove);
+                });
 
-            if(savedShape===null){
-                savedShape=random;
-                displayHeldShape();
-                getNewShape();
-            }else {
-                tmp=savedShape;
-                savedShape=random;
-                currentShape=[...shapes[tmp]];
-                random=tmp;
-                currentPosition = 4;
-                rotation=0;
-                shapeProjection = [...currentShape];
-                displayHeldShape();
-                draw();
+                if(savedShape===null){ //when no shape is held
+                    savedShape=random;  //saves the current shape
+                    displayHeldShape();
+                    getNewShape();
+                    tmpHold=0;
+                }else {
+                    tmpHold=savedShape;
+                    savedShape=random;
+                    currentShape=[...shapes[tmpHold]]; //swiches current shape and the held shape
+                    random=tmpHold;
+                    currentPosition = 4;
+                    rotation=0;
+                    shapeProjection = [...currentShape];
+                    displayHeldShape();
+                    draw();
+                }
             }
-            
-            
         }
 
 
@@ -475,6 +479,10 @@ const Play = () => {
                 shapeProjection = [...currentShape];
                 draw();
                 displayNextShape();
+                if(tmpHold != null)
+                {
+                    canHold=true; //enables the hold function
+                }
             }
             else {
                 console.log("endgame");
