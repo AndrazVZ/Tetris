@@ -67,6 +67,65 @@ const Play = () => {
             
         }
 
+        const miniBoardHold = document.querySelector('.hold-block');
+        const miniCellsHold = Array.from(miniBoardHold.children);
+
+        function displayHeldShape(){
+            var shapeClass;
+            var shapeIndexes;
+            switch(savedShape){
+                case 0:
+                    shapeClass = 'l-shape';
+                    shapeIndexes = [1, 5, 9, 10];
+                    break;
+                case 1:
+                    shapeClass = 'j-shape';
+                    shapeIndexes = [1, 5, 9, 8];
+                    break;
+                case 2:
+                    shapeClass = 'z-shape';
+                    shapeIndexes = [0, 1, 5, 6];
+                    break;
+                case 3:
+                    shapeClass = 's-shape';
+                    shapeIndexes = [1, 2, 4, 5];
+                    break;
+                case 4: 
+                    shapeClass = 't-shape';
+                    shapeIndexes = [1, 4, 5, 6];
+                    break;
+                case 5:
+                    shapeClass = 'square-shape';
+                    shapeIndexes = [1, 2, 5, 6];
+                    break;
+                case 6:
+                    shapeClass = 'line-shape';
+                    shapeIndexes = [1, 5, 9, 13];
+                    break;
+                case null:
+                    shapeClass = 'active';
+                    shapeIndexes = [];
+                    break;
+                default:
+                    shapeClass = 'active';
+                    shapeIndexes = [];
+                    break;
+            }
+
+            
+            miniCellsHold.forEach(cell =>{
+                cell.className = '';
+                cell.className = 'mini-cell';
+            });
+            
+
+            shapeIndexes.forEach(index => {
+                miniCellsHold[index].classList.add('active');
+                miniCellsHold[index].classList.add(shapeClass);
+            });
+            
+        }
+
 
         let currentPosition = 4;
         const L_SHAPE = [
@@ -173,6 +232,7 @@ const Play = () => {
 
             if(savedShape===null){
                 savedShape=random;
+                displayHeldShape();
                 getNewShape();
             }else {
                 tmp=savedShape;
@@ -182,6 +242,7 @@ const Play = () => {
                 currentPosition = 4;
                 rotation=0;
                 shapeProjection = [...currentShape];
+                displayHeldShape();
                 draw();
             }
             
@@ -1260,6 +1321,11 @@ const Play = () => {
                     </div>
                     <div className="hold-block-container">
                         <p>Hold</p>
+                        <div className="hold-block">
+                        {Array.from({ length: 16 }).map((_, i) => (
+                            <div key={i} className="mini-cell" />
+                        ))}
+                        </div>
                     </div>
                     <div className="score-container">
                         <p>Score</p>
