@@ -126,6 +126,7 @@ const Play = () => {
         const scoreElement = document.getElementById('current-score');
         let currentShape = shapes[random];
         let shapeProjection = currentShape;
+        let savedShape=null;
 
         let rotation=0;
         updateScoreElement();
@@ -134,6 +135,57 @@ const Play = () => {
 
         function updateScoreElement(){
             scoreElement.innerHTML = currentScore;
+        }
+
+        function hold(){
+            let tmp;
+            undraw();
+            var projectionClassRemove;
+            switch(random){
+                case 0:
+                    projectionClassRemove ='projection-l';
+                    break;
+                case 1:
+                    projectionClassRemove ='projection-j';
+                    break;
+                case 2:
+                    projectionClassRemove = 'projection-z';
+                    break;
+                case 3:
+                    projectionClassRemove = 'projection-s';
+                    break;
+                case 4: 
+                projectionClassRemove = 'projection-t';
+                    break;
+                case 5:
+                    projectionClassRemove = 'projection-square';
+                    break;
+                case 6:
+                    projectionClassRemove = 'projection-line';
+                    break;
+                default:
+                    break;
+            }
+
+            shapeProjection.forEach(index => {
+                cells[index].classList.remove(projectionClassRemove);
+            });
+
+            if(savedShape===null){
+                savedShape=random;
+                getNewShape();
+            }else {
+                tmp=savedShape;
+                savedShape=random;
+                currentShape=[...shapes[tmp]];
+                random=tmp;
+                currentPosition = 4;
+                rotation=0;
+                shapeProjection = [...currentShape];
+                draw();
+            }
+            
+            
         }
 
 
@@ -1176,6 +1228,9 @@ const Play = () => {
                 rotate();
             }else if(e.key === ' ' || e.key === 'Spacebar'){
                 drop();
+            }
+            else if(e.key === 'c'){
+                hold();
             }
         });
         
