@@ -1,27 +1,14 @@
-// routes/UsersRoutes.js
 const express = require("express");
-const path    = require("path");
-const multer  = require("multer");
-const router  = express.Router();
-const UsersController = require("../controllers/UsersController");
+const router = express.Router();
+const UsersController = require("../controllers/UsersController"); // Import the controller
 
-// store uploads in root/uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => 
-      cb(null, path.join(__dirname, "../uploads")),
-    filename: (req, file, cb) =>
-      cb(null, Date.now() + path.extname(file.originalname))
-  });
-  
-  const upload = multer({ storage });
-
+// Route to get all users
 router.get("/", UsersController.getAllUsers);
+
+// Route to create a new user
 router.post("/", UsersController.createUser);
 
-router.put(
-    "/update-profile-picture/:userId",
-    upload.single("profilePicture"),
-    UsersController.updateProfilePicture
-  );
+router.put('/update-profile-picture/:userId', UsersController.updateProfilePicture);
+
 
 module.exports = router;

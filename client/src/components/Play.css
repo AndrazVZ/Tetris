@@ -113,17 +113,6 @@
     padding: 5px;
     margin: 0px auto;
 }
-
-.hold-block {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    width: 80px;
-    height: 80px;
-    gap: 2px;
-    background-color: #222;
-    padding: 5px;
-    margin: 0px auto;
-}
   
 .mini-cell {
     width: 18px;
