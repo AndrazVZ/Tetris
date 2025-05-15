@@ -10,8 +10,6 @@ const PORT = process.env.PORT || 3000;
 // Middlewares
 app.use(cors());
 app.use(express.json());        // Parse JSON
-app.use("/uploads", express.static(path.join(__dirname, "uploads"))); //Profile Picture
-
 
 // Connect to MongoDB
 const { MONGO_USER, MONGO_PASS } = process.env;

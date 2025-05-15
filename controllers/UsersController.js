@@ -26,37 +26,27 @@ const User = require("../models/UsersModel.js"); // Import the User model
     };
 
     const updateProfilePicture = async (req, res) => {
-    try {
-          // 1. Multer puts the file metadata on req.file
-          if (!req.file) {
-            return res.status(400).json({ error: "No file uploaded." });
-          }
-      
-          // 2. Build a URL that your React <img> can fetch
-          const pictureUrl = `/uploads/${req.file.filename}`;
-      
-          // 3. Update the user’s profilePicture field in Mongo
-          const updatedUser = await User.findByIdAndUpdate(
-            req.params.userId,
-            { profilePicture: pictureUrl },
-            { new: true }
-          );
-          if (!updatedUser) {
-            return res.status(404).json({ error: "User not found." });
-          }
-      
-          // 4. Send the updated user back to the client
-          res.json(updatedUser);
-        } catch (err) {
-          console.error("Error in updateProfilePicture:", err);
-          res.status(500).json({ error: "Failed to update profile picture" });
+        const { profilePicture } = req.body;
+
+        try {
+            const updatedUser = await User.findByIdAndUpdate(
+                req.params.userId,
+                { profilePicture },
+                { new: true }
+            );
+            res.json(updatedUser);
+        } catch (error) {
+            console.error("Error updating profile picture:", error);
+            res.status(500).json({ error: "Failed to update profile picture" });
         }
-      };
-        
+    };
+
+module.exports = {
+    updateProfilePicture,
+};
 
 module.exports = {
     getAllUsers,
     createUser,
     updateProfilePicture,
-  };
-  
+};

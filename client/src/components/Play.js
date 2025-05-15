@@ -67,65 +67,6 @@ const Play = () => {
             
         }
 
-        const miniBoardHold = document.querySelector('.hold-block');
-        const miniCellsHold = Array.from(miniBoardHold.children);
-
-        function displayHeldShape(){
-            var shapeClass;
-            var shapeIndexes;
-            switch(savedShape){
-                case 0:
-                    shapeClass = 'l-shape';
-                    shapeIndexes = [1, 5, 9, 10];
-                    break;
-                case 1:
-                    shapeClass = 'j-shape';
-                    shapeIndexes = [1, 5, 9, 8];
-                    break;
-                case 2:
-                    shapeClass = 'z-shape';
-                    shapeIndexes = [0, 1, 5, 6];
-                    break;
-                case 3:
-                    shapeClass = 's-shape';
-                    shapeIndexes = [1, 2, 4, 5];
-                    break;
-                case 4: 
-                    shapeClass = 't-shape';
-                    shapeIndexes = [1, 4, 5, 6];
-                    break;
-                case 5:
-                    shapeClass = 'square-shape';
-                    shapeIndexes = [1, 2, 5, 6];
-                    break;
-                case 6:
-                    shapeClass = 'line-shape';
-                    shapeIndexes = [1, 5, 9, 13];
-                    break;
-                case null:
-                    shapeClass = 'active';
-                    shapeIndexes = [];
-                    break;
-                default:
-                    shapeClass = 'active';
-                    shapeIndexes = [];
-                    break;
-            }
-
-            
-            miniCellsHold.forEach(cell =>{
-                cell.className = '';
-                cell.className = 'mini-cell';
-            });
-            
-
-            shapeIndexes.forEach(index => {
-                miniCellsHold[index].classList.add('active');
-                miniCellsHold[index].classList.add(shapeClass);
-            });
-            
-        }
-
 
         let currentPosition = 4;
         const L_SHAPE = [
@@ -185,9 +126,6 @@ const Play = () => {
         const scoreElement = document.getElementById('current-score');
         let currentShape = shapes[random];
         let shapeProjection = currentShape;
-        let savedShape=null;
-        let tmpHold=null;
-        let canHold=true;
 
         let rotation=0;
         updateScoreElement();
@@ -196,61 +134,6 @@ const Play = () => {
 
         function updateScoreElement(){
             scoreElement.innerHTML = currentScore;
-        }
-
-        function hold(){
-            if(canHold) //checks if it can hold shape
-            {
-                canHold=false; //disables the hold function until new shape is placed
-                undraw();
-                var projectionClassRemove;
-                switch(random){
-                    case 0:
-                        projectionClassRemove ='projection-l';
-                        break;
-                    case 1:
-                        projectionClassRemove ='projection-j';
-                        break;
-                    case 2:
-                        projectionClassRemove = 'projection-z';
-                        break;
-                    case 3:
-                        projectionClassRemove = 'projection-s';
-                        break;
-                    case 4: 
-                    projectionClassRemove = 'projection-t';
-                        break;
-                    case 5:
-                        projectionClassRemove = 'projection-square';
-                        break;
-                    case 6:
-                        projectionClassRemove = 'projection-line';
-                        break;
-                    default:
-                        break;
-                }
-
-                shapeProjection.forEach(index => {
-                    cells[index].classList.remove(projectionClassRemove);
-                });
-
-                if(savedShape===null){ //when no shape is held
-                    savedShape=random;  //saves the current shape
-                    displayHeldShape();
-                    getNewShape();
-                    tmpHold=0;
-                }else {
-                    tmpHold=savedShape;
-                    savedShape=random;
-                    currentShape=[...shapes[tmpHold]]; //swiches current shape and the held shape
-                    random=tmpHold;
-                    currentPosition = 4;
-                    rotation=0;
-                    shapeProjection = [...currentShape];
-                    displayHeldShape();
-                    draw();
-                }
-            }
         }
 
 
@@ -479,10 +362,6 @@ const Play = () => {
                 shapeProjection = [...currentShape];
                 draw();
                 displayNextShape();
-                if(tmpHold != null)
-                {
-                    canHold=true; //enables the hold function
-                }
             }
             else {
                 console.log("endgame");
@@ -1298,9 +1177,6 @@ const Play = () => {
             }else if(e.key === ' ' || e.key === 'Spacebar'){
                 drop();
             }
-            else if(e.key === 'c'){
-                hold();
-            }
         });
         
         return () => clearInterval(timer); //Cleanup on unmount
@@ -1329,11 +1205,6 @@ const Play = () => {
                     </div>
                     <div className="hold-block-container">
                         <p>Hold</p>
-                        <div className="hold-block">
-                        {Array.from({ length: 16 }).map((_, i) => (
-                            <div key={i} className="mini-cell" />
-                        ))}
-                        </div>
                     </div>
                     <div className="score-container">
                         <p>Score</p>
