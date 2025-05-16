@@ -3,6 +3,7 @@ import axios from "axios";
 import "./Header.css";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
+import GameOverModal from "./GameOverModal";
 
 const API_BASE = "http://localhost:3000";
 
@@ -11,6 +12,7 @@ const Header = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [showGameOver, setShowGameOver] = useState(false);
   const [user, setUser] = useState(null);
   const fileInputRef = useRef(null);
 
@@ -34,6 +36,15 @@ const Header = () => {
   // Toggle profile modal and lock scroll when open
   const toggleProfile = () => {
     setShowProfile(prev => {
+      const next = !prev;
+      document.body.style.overflow = next ? "hidden" : "auto";
+      return next;
+    });
+  };
+
+  // Toggle game over modal and lock scroll when open
+  const toggleGameOver = () => {
+    setShowGameOver(prev => {
       const next = !prev;
       document.body.style.overflow = next ? "hidden" : "auto";
       return next;
@@ -176,6 +187,9 @@ const Header = () => {
       {/* Login/Register Modals */}
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} onLoginSuccess={handleLoginSuccess} />}
       {showRegister && <RegisterModal onClose={() => setShowRegister(false)} />}
+
+      {/* GameOver Modal */}
+      {showGameOver && <GameOverModal onClose={() => setShowGameOver(false)}/>}
     </>
   );
 };
