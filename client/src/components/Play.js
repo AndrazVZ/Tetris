@@ -185,9 +185,15 @@ const Play = () => {
         const scoreElement = document.getElementById('current-score');
         let currentShape = shapes[random];
         let shapeProjection = currentShape;
-        let savedShape=null;
-        let tmpHold=null;
-        let canHold=true;
+        let savedShape = null;
+        let tmpHold = null;
+        let canHold = true;
+
+        // Scoring variables
+        let B2B = 0; // Back-to-back tetris, times 4 rows were broken consecutively
+        let consecutiveLines = 0; // times at least 1 row was broken consecutively
+        let totalRows = 0; // number of rows broken during the game
+        let level = 1;
 
         let rotation=0;
         updateScoreElement();
@@ -365,6 +371,45 @@ const Play = () => {
             }
         }
 
+        function moveDownForced() {
+            //.some() checks if any of the cells in the shape are going over the board
+            const atBottom = currentShape.some(index => index + width >= cells.length);
+            if (!atBottom) {
+                
+                //Check if any *bottom block* is blocked by another shape
+                const blockedByAnotherShape = currentShape.some(index => {
+                    //Only check if there is NO other block of currentShape directly below this block
+                    const isBottomBlock = !currentShape.includes(index + width);
+                    if (isBottomBlock) {
+                        return cells[index + width] && cells[index + width].classList.contains('active');
+                    }
+                    return false;
+                });
+                if(!blockedByAnotherShape){
+                    undraw();
+                    currentPosition += width;
+                    currentShape = currentShape.map(index => index + width);
+                    currentScore+=1;
+                    updateScoreElement();
+                    draw();
+                }else{
+                    getNewShape();
+                }
+            } else {
+                getNewShape();
+            }
+            const overlapWithProjection = currentShape.filter(index => shapeProjection.includes(index));
+            if (overlapWithProjection.length > 0) {
+                overlapWithProjection.forEach(value => {
+                    cells[value].classList.forEach(cls => {
+                        if (cls.startsWith('projection-')) {
+                            cells[value].classList.remove(cls);
+                        }
+                    });
+                });
+            }
+        }
+
         function drop() {       
             undraw();
             while (true) { //Continuously drops the shape until it hits bottom or another shape
@@ -382,6 +427,7 @@ const Play = () => {
                     if(!blockedByAnotherShape){
                         currentPosition += width;
                         currentShape = currentShape.map(index => index + width);
+                        currentScore+=2;
                     }else{
                         break;
                     }
@@ -389,6 +435,7 @@ const Play = () => {
                     break;
                 }
             }
+            updateScoreElement();
             
             draw();
             const overlapWithProjection = currentShape.filter(index => shapeProjection.includes(index));
@@ -1224,10 +1271,15 @@ const Play = () => {
                             }
                         });
                     }
-        
+                    
+                    consecutiveLines += 1;
+
                     //Move all else down
                     dropBlocksAbove(row);
+                } else {
+                    consecutiveLines = 0;
                 }
+
                 
 
                 function dropBlocksAbove(startIndex) {
@@ -1262,19 +1314,30 @@ const Play = () => {
                 }
             }
 
+            totalRows += rows;
+
+            if(totalRows >= level * 10) 
+                level += 1;
+
+            currentScore += consecutiveLines * 50;
+
             //Check how many rows were deleted
             switch(rows){
                 case 1:
-                    currentScore += 40;
+                    currentScore += 100 * level;
+                    B2B	= 0;
                     break;
                 case 2:
-                    currentScore += 100;
+                    currentScore += 300 * level;
+                    B2B	= 0;
                     break;
                 case 3:
-                    currentScore += 300;
+                    currentScore += 500 * level;
+                    B2B	= 0;
                     break;
                 case 4:
-                    currentScore += 1200;
+                    currentScore += 800 * level + 1200 * B2B;
+                    B2B += 1;
                     break;
                 default:
                     currentScore += 0;
@@ -1291,7 +1354,7 @@ const Play = () => {
             }else if(e.key === 'ArrowRight'){
                 moveRight();
             }else if(e.key === 'ArrowDown'){
-                moveDown(); 
+                moveDownForced(); 
                 resetTimer();
             }else if(e.key === 'ArrowUp'){
                 rotate();
