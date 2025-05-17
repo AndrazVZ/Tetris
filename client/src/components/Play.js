@@ -1,11 +1,20 @@
 // Play.js
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./Play.css";
 import Header from './Header';
-
-
+import GameOverModal from "./GameOverModal";
 
 const Play = () => {
+    const [showGameOver, setShowGameOver] = useState(false);
+    const [score,setScore] = useState(0);
+
+     const toggleGameOver = () => {
+    setShowGameOver(prev => {
+        const next = !prev;
+        document.body.style.overflow = next ? "hidden" : "auto";
+        return next;
+        });
+    };
     useEffect(() => {
         const board = document.querySelector('.board');
         const cells = Array.from(board.children);
@@ -532,6 +541,8 @@ const Play = () => {
                 }
             }
             else {
+                setScore(currentScore);
+                toggleGameOver(); //open the game over screen
                 console.log("endgame");
                 clearInterval(timer);
                 //call pop-up
@@ -1405,6 +1416,9 @@ const Play = () => {
                 </div>
             </div>
         </div>
+        {showGameOver && (
+            <GameOverModal onClose={() => setShowGameOver(false)}score={score} />
+        )}
         </>
     );
 };

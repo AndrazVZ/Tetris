@@ -48,3 +48,7 @@
     backdrop-filter: blur(5px); /* blur background */
     z-index: 1500;
 }
+
+.modal #small_message{
+    font-size:0.4em;
+}
