@@ -7,8 +7,28 @@ import GameOverModal from "./GameOverModal";
 const Play = () => {
     const [showGameOver, setShowGameOver] = useState(false);
     const [score,setScore] = useState(0);
+    const blockClickSound = new Audio('/sounds/block-click.mp3');
+    const backgroundMusic = new Audio('/sounds/bg-music.mp3');
+    const rowBreakSound = new Audio('/sounds/row-break.mp3');
+    const gameOverSound = new Audio('/sounds/game-over.mp3');
+    
 
-     const toggleGameOver = () => {
+   window.addEventListener('popstate', () => {
+        backgroundMusic.pause();
+        backgroundMusic.currentTime = 0;
+        backgroundMusic.volume = 0.7;
+    });
+
+    //Only let sounds play on this site and wait for the user to press a key
+    if (window.location.pathname === '/play') {
+        document.addEventListener('keydown',()=>{
+            backgroundMusic.play();
+            backgroundMusic.loop = true;
+            backgroundMusic.volume = 0.7;
+        });
+    }
+
+    const toggleGameOver = () => {
     setShowGameOver(prev => {
         const next = !prev;
         document.body.style.overflow = next ? "hidden" : "auto";
@@ -363,9 +383,11 @@ const Play = () => {
                     currentShape = currentShape.map(index => index + width);
                     draw();
                 }else{
+                    blockClickSound.play();
                     getNewShape();
                 }
             } else {
+                blockClickSound.play();
                 getNewShape();
             }
             const overlapWithProjection = currentShape.filter(index => shapeProjection.includes(index));
@@ -402,9 +424,11 @@ const Play = () => {
                     updateScoreElement();
                     draw();
                 }else{
+                    blockClickSound.play();
                     getNewShape();
                 }
             } else {
+                blockClickSound.play();
                 getNewShape();
             }
             const overlapWithProjection = currentShape.filter(index => shapeProjection.includes(index));
@@ -457,6 +481,7 @@ const Play = () => {
                     });
                 });
             }
+            blockClickSound.play();
             getNewShape();
         }
         
@@ -542,6 +567,9 @@ const Play = () => {
             }
             else {
                 setScore(currentScore);
+                backgroundMusic.pause();
+                backgroundMusic.currentTime = 0;
+                gameOverSound.play();
                 toggleGameOver(); //open the game over screen
                 console.log("endgame");
                 clearInterval(timer);
@@ -1269,6 +1297,7 @@ const Play = () => {
                 }
         
                 if (isFullRow) {
+                    rowBreakSound.play();
                     //console.log("Full row at index: " + row);
         
                     //remove row
