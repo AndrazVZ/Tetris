@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import "./Play.css";
 import Header from './Header';
 import GameOverModal from "./GameOverModal";
+import axios from "axios";
 
 const Play = () => {
     const [showGameOver, setShowGameOver] = useState(false);
@@ -567,6 +568,7 @@ const Play = () => {
             }
             else {
                 setScore(currentScore);
+                sendScoreToBackend(score);
                 backgroundMusic.pause();
                 backgroundMusic.currentTime = 0;
                 gameOverSound.play();
@@ -1405,6 +1407,20 @@ const Play = () => {
                 hold();
             }
         });
+
+        async function sendScoreToBackend(score){
+            try {
+                const user = JSON.parse(localStorage.getItem('tetrisUser'));
+                const res = await axios.post('http://localhost:3000/api/users/updateScore', {
+                    id: user._id,
+                    score: score
+                });
+
+                console.log("Score updated:", res.data);
+            } catch (err) {
+                console.error('Error updating score:', err.response?.data || err.message);
+            }
+        }
         
         return () => clearInterval(timer); //Cleanup on unmount
         

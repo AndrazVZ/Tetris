@@ -17,6 +17,7 @@ const storage = multer.diskStorage({
 
 router.get("/", UsersController.getAllUsers);
 router.post("/", UsersController.createUser);
+router.post("/updateScore",UsersController.checkScoreAndUpdate);
 
 router.put(
     "/update-profile-picture/:userId",
