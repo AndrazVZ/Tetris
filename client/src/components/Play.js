@@ -568,7 +568,8 @@ const Play = () => {
             }
             else {
                 setScore(currentScore);
-                sendScoreToBackend(score);
+                console.log(currentScore);
+                sendScoreToBackend(currentScore);
                 backgroundMusic.pause();
                 backgroundMusic.currentTime = 0;
                 gameOverSound.play();
