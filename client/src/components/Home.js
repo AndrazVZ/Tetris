@@ -88,7 +88,7 @@ const Home = ()=>{
             <div className="menu-container">
                 <div className="menu-options-container">
                     <Link to="/play"><button>Play</button></Link>
-                    <button>Leaderboard</button>
+                    <Link to="/leaderboard"><button>Leaderboard</button></Link>
                     <button>Settings</button>
                 </div>
             </div>
