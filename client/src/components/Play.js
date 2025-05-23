@@ -13,6 +13,7 @@ const Play = () => {
     const rowBreakSound = new Audio('/sounds/row-break.mp3');
     const gameOverSound = new Audio('/sounds/game-over.mp3');
     
+    let scoreToAdd = 0;
 
    window.addEventListener('popstate', () => {
         backgroundMusic.pause();
@@ -1284,6 +1285,12 @@ const Play = () => {
                 });
             }
         }
+
+        function addToScore(){
+            let promise = new Promise(()=>{
+
+            });
+        }
         
         function checkForFullRow() {
             const width = 10;
@@ -1363,29 +1370,34 @@ const Play = () => {
                 level += 1;
 
             currentScore += consecutiveLines * 50;
-
+            scoreToAdd = consecutiveLines * 50;
             //Check how many rows were deleted
             switch(rows){
                 case 1:
                     currentScore += 100 * level;
+                    scoreToAdd = 100 * level;
                     B2B	= 0;
                     break;
                 case 2:
                     currentScore += 300 * level;
+                    scoreToAdd = 300 * level;
                     B2B	= 0;
                     break;
                 case 3:
                     currentScore += 500 * level;
+                    scoreToAdd = 500 * level;
                     B2B	= 0;
                     break;
                 case 4:
                     currentScore += 800 * level + 1200 * B2B;
+                    scoreToAdd = 800 * level + 1200 * B2B;
                     B2B += 1;
                     break;
                 default:
                     currentScore += 0;
                     break;
             }
+
             updateScoreElement();
         }
             
