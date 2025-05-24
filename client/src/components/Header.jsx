@@ -15,12 +15,20 @@ const Header = () => {
   const [showGameOver, setShowGameOver] = useState(false);
   const [user, setUser] = useState(null);
   const fileInputRef = useRef(null);
+  const [volume,setVolume] = useState(50);
 
   // Load user from localStorage on mount
   useEffect(() => {
     const stored = localStorage.getItem("tetrisUser");
     if (stored) {
       setUser(JSON.parse(stored));
+    }
+  }, []);
+
+  useEffect(() => {
+    const isVolume = localStorage.getItem("volume");
+    if (isVolume) {
+      setVolume(JSON.parse(isVolume));
     }
   }, []);
 
@@ -64,6 +72,12 @@ const Header = () => {
     setUser(null);
     setShowProfile(false);
   };
+
+  // Save settings
+  const saveSettings = async(volume)=>{
+    localStorage.setItem("volume",volume);
+    window.dispatchEvent(new Event("volumeChanged"));
+  }
 
   // When a file is selected, upload to server
   const handleFileChange = async (e) => {
@@ -138,7 +152,7 @@ const Header = () => {
               <span role="img" aria-label="volume">
                 🔈
               </span>
-              <input type="range" min="0" max="100" />
+              <input type="range" min="0" max="100" step="5" id="volume" value={volume} onChange={(e) => setVolume(parseInt(e.target.value))} />
             </div>
             <div className="control-keys">
               <div><span>Hold</span> <span>⬆️</span></div>
@@ -146,7 +160,7 @@ const Header = () => {
               <div><span>Left</span> <span>⬅️</span></div>
               <div><span>Right</span> <span>➡️</span></div>
             </div>
-            <button className="save-button" onClick={toggleSettings}>Save</button>
+            <button className="save-button" onClick={()=>saveSettings(volume)}>Save</button>
           </div>
         </>
       )}

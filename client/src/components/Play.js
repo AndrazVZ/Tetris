@@ -1,5 +1,5 @@
 // Play.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./Play.css";
 import Header from './Header';
 import GameOverModal from "./GameOverModal";
@@ -8,27 +8,65 @@ import axios from "axios";
 const Play = () => {
     const [showGameOver, setShowGameOver] = useState(false);
     const [score,setScore] = useState(0);
+    const [volume,setVolume] = useState(null);
     const blockClickSound = new Audio('/sounds/block-click.mp3');
-    const backgroundMusic = new Audio('/sounds/bg-music.mp3');
+    const backgroundMusicRef = useRef(null);
     const rowBreakSound = new Audio('/sounds/row-break.mp3');
     const gameOverSound = new Audio('/sounds/game-over.mp3');
     
     let scoreToAdd = 0;
 
-   window.addEventListener('popstate', () => {
-        backgroundMusic.pause();
-        backgroundMusic.currentTime = 0;
-        backgroundMusic.volume = 0.7;
-    });
+    useEffect(() => {
+        const storedVolume = localStorage.getItem("volume");
+        if (storedVolume) {
+          setVolume(JSON.parse(storedVolume));
+        }
+    }, []);
 
-    //Only let sounds play on this site and wait for the user to press a key
-    if (window.location.pathname === '/play') {
-        document.addEventListener('keydown',()=>{
-            backgroundMusic.play();
-            backgroundMusic.loop = true;
-            backgroundMusic.volume = 0.7;
-        });
+    useEffect(() => {
+        const handleVolumeChange = () => {
+            const storedVolume = localStorage.getItem("volume");
+            if (storedVolume !== null) {
+            setVolume(JSON.parse(storedVolume));
+            }
+        };
+
+        window.addEventListener("volumeChanged", handleVolumeChange);
+        return () => window.removeEventListener("volumeChanged", handleVolumeChange);
+    }, []);
+
+    useEffect(() => {
+        backgroundMusicRef.current = new Audio("/sounds/bg-music.mp3");
+        backgroundMusicRef.current.loop = true;
+    }, []);
+
+    useEffect(() => {
+    if (backgroundMusicRef.current) {
+        backgroundMusicRef.current.volume = volume / 100;
     }
+    }, [volume]);
+
+    useEffect(() => {
+    const handleKeyDown = () => {
+        if (backgroundMusicRef.current && backgroundMusicRef.current.paused) {
+        backgroundMusicRef.current.play().catch((err) => {
+            console.error("Playback error:", err);
+        });
+        }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+    }, []);
+
+    useEffect(() => {
+    return () => {
+        if (backgroundMusicRef.current) {
+        backgroundMusicRef.current.pause();
+        backgroundMusicRef.current.currentTime = 0;
+        }
+    };
+    }, []);
 
     const toggleGameOver = () => {
     setShowGameOver(prev => {
@@ -571,8 +609,11 @@ const Play = () => {
                 setScore(currentScore);
                 console.log(currentScore);
                 sendScoreToBackend(currentScore);
-                backgroundMusic.pause();
-                backgroundMusic.currentTime = 0;
+                //backgroundMusic.pause();
+                //backgroundMusic.currentTime = 0;
+                backgroundMusicRef.current.pause();
+                backgroundMusicRef.current.currentTime = 0;
+                
                 gameOverSound.play();
                 toggleGameOver(); //open the game over screen
                 console.log("endgame");
