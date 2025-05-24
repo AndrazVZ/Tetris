@@ -9,6 +9,8 @@ const Play = () => {
     const [showGameOver, setShowGameOver] = useState(false);
     const [score,setScore] = useState(0);
     const [volume,setVolume] = useState(null);
+    const [gamePaused, setGamePaused] = useState(false);
+    var gamePausedRef = useRef(false);
     const blockClickSound = new Audio('/sounds/block-click.mp3');
     const backgroundMusicRef = useRef(null);
     const rowBreakSound = new Audio('/sounds/row-break.mp3');
@@ -67,6 +69,25 @@ const Play = () => {
         }
     };
     }, []);
+
+    useEffect(() => {
+        const handlePause = () => {
+            if(gamePausedRef.current){
+                setGamePaused(false);
+                console.log("Game unpaused");
+            }else{
+                setGamePaused(true);
+                console.log("Game paused:", true);
+            }
+        };
+
+        window.addEventListener("pauseGame", handlePause);
+        //return () => window.removeEventListener("pauseGame", handlePause);
+    }, []);
+
+    useEffect(() => {
+        gamePausedRef.current = gamePaused;
+    }, [gamePaused]);
 
     const toggleGameOver = () => {
     setShowGameOver(prev => {
@@ -274,6 +295,9 @@ const Play = () => {
         }
 
         function hold(){
+            if(gamePausedRef.current){
+                return;
+            }
             if(canHold) //checks if it can hold shape
             {
                 canHold=false; //disables the hold function until new shape is placed
@@ -404,6 +428,9 @@ const Play = () => {
         }
         
         function moveDown() {
+            if(gamePausedRef.current){
+                return;
+            }
             //.some() checks if any of the cells in the shape are going over the board
             const atBottom = currentShape.some(index => index + width >= cells.length);
             if (!atBottom) {
@@ -443,6 +470,9 @@ const Play = () => {
         }
 
         function moveDownForced() {
+            if(gamePausedRef.current){
+                return;
+            }
             //.some() checks if any of the cells in the shape are going over the board
             const atBottom = currentShape.some(index => index + width >= cells.length);
             if (!atBottom) {
@@ -483,7 +513,10 @@ const Play = () => {
             }
         }
 
-        function drop() {       
+        function drop() {
+            if(gamePausedRef.current){
+                return;
+            }       
             undraw();
             while (true) { //Continuously drops the shape until it hits bottom or another shape
                 const atBottom = currentShape.some(index => index + width >= cells.length);
@@ -528,6 +561,9 @@ const Play = () => {
         draw();
 
         function moveLeft() {
+            if(gamePausedRef.current){
+                return;
+            }
             const atLeftWall = currentShape.some(index => index % width === 0);
         
             if (!atLeftWall) {
@@ -558,6 +594,9 @@ const Play = () => {
         }
         
         function moveRight(){
+            if(gamePausedRef.current){
+                return;
+            }
             const atRightWall = currentShape.some(index => index % width === 9);
         
             if (!atRightWall) {
@@ -706,7 +745,6 @@ const Play = () => {
                 }
             });
         }
-
         let timer = setInterval(moveDown, DROP_INTERVAL);
 
         function resetTimer() {
@@ -715,6 +753,9 @@ const Play = () => {
         }
         
         function rotate(){
+            if(gamePausedRef.current){
+                return;
+            }
             let atLeftWall;
             let atRightWall;
             let blockedByAnotherShape;

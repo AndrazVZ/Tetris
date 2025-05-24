@@ -34,9 +34,11 @@ const Header = () => {
 
   // Toggle settings modal and lock scroll when open
   const toggleSettings = () => {
+    window.dispatchEvent(new Event("pauseGame"));
     setShowSettings(prev => {
       const next = !prev;
       document.body.style.overflow = next ? "hidden" : "auto";
+      
       return next;
     });
   };
