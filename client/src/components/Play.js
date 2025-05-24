@@ -41,7 +41,7 @@ const Play = () => {
         const board = document.querySelector('.board');
         const cells = Array.from(board.children);
         const width = 10;
-        const DROP_INTERVAL = 1000;
+        let DROP_INTERVAL = 1000;
 
         const miniBoard = document.querySelector('.next-block');
         const miniCells = Array.from(miniBoard.children);
@@ -1366,8 +1366,12 @@ const Play = () => {
 
             totalRows += rows;
 
-            if(totalRows >= level * 10) 
+            if(totalRows >= level * 10 && level<=8) 
+            {
                 level += 1;
+                DROP_INTERVAL-=130;
+                resetTimer();
+            }
 
             currentScore += consecutiveLines * 50;
             scoreToAdd = consecutiveLines * 50;
