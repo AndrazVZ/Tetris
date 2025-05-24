@@ -30,8 +30,10 @@ Your goal is to rotate, move, and drop tetrominoes to clear horizontal lines and
 - Use the arrow keys to control the tetrominoes:
   - **←** Move Left  
   - **→** Move Right  
-  - **↓** Move Down (faster drop)  
-  - **↑** Hold Current Piece  
+  - **↓** Move Down 
+  - **↑** Rotaite Shape
+  - **c** Hold Current Piece
+  - **Space** Drop down shape
   - **Esc** Pause the game (via in-game menu)
 
 - Complete horizontal lines to clear them and earn points.
