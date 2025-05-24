@@ -4,6 +4,7 @@ import "./Header.css";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 import GameOverModal from "./GameOverModal";
+import CountdownModal from "./CountdownModal";
 
 const API_BASE = "http://localhost:3000";
 
@@ -13,6 +14,7 @@ const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [showGameOver, setShowGameOver] = useState(false);
+  const [showCountdown, setShowCountdown] = useState(false);
   const [user, setUser] = useState(null);
   const fileInputRef = useRef(null);
   const [volume,setVolume] = useState(50);
@@ -206,6 +208,9 @@ const Header = () => {
 
       {/* GameOver Modal */}
       {showGameOver && <GameOverModal onClose={() => setShowGameOver(false)}/>}
+
+      {/* Countdown Modal */}
+      {showCountdown && <CountdownModal onClose={() => setShowCountdown(false)}/>}
     </>
   );
 };

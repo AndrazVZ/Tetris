@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import "./Play.css";
 import Header from './Header';
 import GameOverModal from "./GameOverModal";
+import CountdownModal from "./CountdownModal";
 import axios from "axios";
 
 const Play = () => {
@@ -10,6 +11,7 @@ const Play = () => {
     const [score,setScore] = useState(0);
     const [volume,setVolume] = useState(null);
     const [gamePaused, setGamePaused] = useState(false);
+    const [countdown, setShowCountdown] = useState(false);
     var gamePausedRef = useRef(false);
     const blockClickSound = new Audio('/sounds/block-click.mp3');
     const backgroundMusicRef = useRef(null);
@@ -73,8 +75,12 @@ const Play = () => {
     useEffect(() => {
         const handlePause = () => {
             if(gamePausedRef.current){
-                setGamePaused(false);
-                console.log("Game unpaused");
+                setShowCountdown(true);
+                setTimeout(()=>{
+                    setGamePaused(false);
+                    console.log("Game unpaused");
+                },3000)
+                
             }else{
                 setGamePaused(true);
                 console.log("Game paused:", true);
@@ -91,6 +97,14 @@ const Play = () => {
 
     const toggleGameOver = () => {
     setShowGameOver(prev => {
+        const next = !prev;
+        document.body.style.overflow = next ? "hidden" : "auto";
+        return next;
+        });
+    };
+
+    const toggleCountdown = () => {
+    setShowCountdown(prev => {
         const next = !prev;
         document.body.style.overflow = next ? "hidden" : "auto";
         return next;
@@ -1562,6 +1576,9 @@ const Play = () => {
         </div>
         {showGameOver && (
             <GameOverModal onClose={() => setShowGameOver(false)}score={score} />
+        )}
+        {countdown && (
+            <CountdownModal onClose={() => setShowCountdown(false)}/>
         )}
         </>
     );

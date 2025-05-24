@@ -89,7 +89,6 @@ const Home = ()=>{
                 <div className="menu-options-container">
                     <Link to="/play"><button>Play</button></Link>
                     <Link to="/leaderboard"><button>Leaderboard</button></Link>
-                    <button>Settings</button>
                 </div>
             </div>
         </div>

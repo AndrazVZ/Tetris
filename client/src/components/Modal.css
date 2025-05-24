@@ -52,3 +52,9 @@
 .modal #small_message{
     font-size:0.4em;
 }
+
+.modal.clear{
+    background-color:transparent;
+    border:none;
+    box-shadow:none;
+}
